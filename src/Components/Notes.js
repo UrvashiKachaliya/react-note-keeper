@@ -2,20 +2,31 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Container, Col, Row } from "react-bootstrap";
 import AddIcon from "@mui/icons-material/Add";
 import Cards from "./Cards";
-
+import EditIcon from "@mui/icons-material/Edit";
 
 export default function Notes() {
   const [title, settitle] = useState("");
   const [content, setcontent] = useState("");
   const [notes, setnotes] = useState(getdata());
+  const [editIndex, seteditIndex] = useState(null);
 
   const addNote = () => {
-    if (title) {
-      setnotes((prev) => [...prev, { title, content }]);
+    if (title.trim() === "") {
+      alert("Title Field Required");
+    } else if (title.length > 10) {
+      alert("Title length must be smaller than 10 characters");
+    } else {
+      if (editIndex !== null) {
+        var updatedtodos = notes.map((note, index) =>
+          index === editIndex ? { title, content } : note
+        );
+        setnotes(updatedtodos);
+        seteditIndex(null);
+      } else {
+        setnotes((prev) => [...prev, { title, content }]);
+      }
       settitle("");
       setcontent("");
-    } else {
-      alert("Title Field Required");
     }
   };
 
@@ -32,6 +43,12 @@ export default function Notes() {
     const updateddata = localStorage.setItem("note", JSON.stringify(notes));
     setnotes((prev) => prev.filter((note, i) => i !== index));
     console.log(updateddata);
+  };
+
+  const EditNote = (index) => {
+    seteditIndex(index);
+    settitle(notes[index].title);
+    setcontent(notes[index].content);
   };
 
   return (
@@ -68,10 +85,10 @@ export default function Notes() {
               borderRadius: "50%",
               zIndex: "1",
               marginTop: "-20px",
-              backgroundColor: "#517789",
+              backgroundColor: "#A64D79",
             }}
           >
-            <AddIcon />
+            {editIndex ? <EditIcon /> : <AddIcon />}
           </Button>
         </div>
       </Container>
@@ -79,7 +96,11 @@ export default function Notes() {
         <Row>
           {notes.map((item, index) => (
             <Col key={index} lg={3} className="mb-4">
-              <Cards data={item} onDelete={() => deleteNote(index)} />
+              <Cards
+                data={item}
+                onDelete={() => deleteNote(index)}
+                onEdit={() => EditNote(index)}
+              />
             </Col>
           ))}
         </Row>

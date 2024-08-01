@@ -3,11 +3,10 @@ import { Button, Card, Container } from "react-bootstrap";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function Cards({ data,onDelete }) {
+export default function Cards({ data, onDelete, onEdit }) {
   const { title, content } = data;
   console.log(title, content);
 
- 
   return (
     <>
       <Container className="pt-5">
@@ -16,14 +15,14 @@ export default function Cards({ data,onDelete }) {
             className="fs-5 border-0"
             type="text"
             style={{ outline: "none", boxShadow: "none" }}
-            defaultValue={title}
+            value={title}
             readOnly
           />
           <hr />
           <textarea
             className="border-0"
             rows={3}
-            defaultValue={content}
+            value={content}
             style={{ outline: "none", boxShadow: "none", resize: "none" }}
             readOnly
           />
@@ -37,10 +36,10 @@ export default function Cards({ data,onDelete }) {
               borderRadius: "50%",
               zIndex: "1",
               marginTop: "-20px",
-              backgroundColor: "#517789",
+              backgroundColor: "#A64D79",
             }}
           >
-            <EditIcon />
+            <EditIcon onClick={onEdit} />
           </Button>
           <Button
             className="me-3 d-flex justify-content-center align-items-center border-0"
@@ -50,7 +49,7 @@ export default function Cards({ data,onDelete }) {
               borderRadius: "50%",
               zIndex: "1",
               marginTop: "-20px",
-              backgroundColor: "#517789",
+              backgroundColor: "#A64D79",
             }}
           >
             <DeleteIcon onClick={onDelete} />
